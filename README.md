@@ -1,5 +1,13 @@
-# discordbot
+## Discord Bot
+To run:
+ 
 
-  #photo bot
-  #sticker bot 
-  #walpaper bot
+    npm install
+    
+    node index.js       (or)
+    node .
+  
+ Ideas:
+ - Sticker
+ - Wallpaper
+ - Photo editor
