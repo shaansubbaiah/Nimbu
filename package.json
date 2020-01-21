@@ -1,23 +1,16 @@
 {
-  "name": "discordbot",
+  "name": "discord",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shaansubbaiah/discordbot.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/shaansubbaiah/discordbot/issues"
-  },
-  "homepage": "https://github.com/shaansubbaiah/discordbot#readme",
   "dependencies": {
     "discord.js": "^11.5.1",
-    "eslint": "^6.8.0"
+    "opusscript": "0.0.7",
+    "ytdl-core": "^1.0.7"
   }
 }

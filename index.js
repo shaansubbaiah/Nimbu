@@ -2,74 +2,86 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 
+var servers={};
+
+const ytdl=require('ytdl-core');
+
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
-}
-
-const cooldowns = new Discord.Collection();
-
 client.once('ready', () => {
-	console.log('Ready!');
+	console.log('I am ready!');
 });
 
 client.on('message', message => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).split(/ +/);
-	const commandName = args.shift().toLowerCase();
+	
+	switch(args[0]){
+		case 'play':
 
-	const command = client.commands.get(commandName)
-		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+			function play(connection,message){
+				var server =servers[message.guild.id];
 
-	if (!command) return;
+				server.dispacther=connection.playStream(ytdl(server.queue[0],{filter:"audioonly"}));
 
-	if (command.guildOnly && message.channel.type !== 'text') {
-		return message.reply('I can\'t execute that command inside DMs!');
-	}
+				server.queue.shift();
 
-	if (command.args && !args.length) {
-		let reply = `You didn't provide any arguments, ${message.author}!`;
+				server.dispacther.on("end",function(){
+					if(server.queue[0]){
+						play(connection,message);
+					}
+					else{
+						connection.disconnect();
+					}
+				});
+			}
 
-		if (command.usage) {
-			reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-		}
 
-		return message.channel.send(reply);
-	}
+			if(!args[1]){
+				message.channel.send("No link attached!");
+				return;
+			}
+			if(!message.member.voiceChannel){
+				message.channel.send("You must be in a channel to play the bot");
+				return;
+			}
+			
+			if(!servers[message.guild.id])servers[message.guild.id]={
+				queue:[]
+			}
 
-	if (!cooldowns.has(command.name)) {
-		cooldowns.set(command.name, new Discord.Collection());
-	}
+			var server=servers[message.guild.id];
 
-	const now = Date.now();
-	const timestamps = cooldowns.get(command.name);
-	const cooldownAmount = (command.cooldown || 3) * 1000;
+			server.queue.push(args[1]);
+			if(!message.guild.voiceConnection)message.member.voiceChannel.join().then(function(connection){
+				play(connection,message);
+			})
 
-	if (timestamps.has(message.author.id)) {
-		const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-		if (now < expirationTime) {
-			const timeLeft = (expirationTime - now) / 1000;
-			return message.reply(`please wait ${timeLeft.toFixed(1)} more second(s) before reusing the \`${command.name}\` command.`);
-		}
-	}
+			break;
 
-	timestamps.set(message.author.id, now);
-	setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+		case 'skip':
+			var server=servers[message.guild.id];
+			if(server.dispacther)server.dispacther.end();
+			message.channel.send("Skip!Hop!Jump!");
+			break;
 
-	try {
-		command.execute(message, args);
-	}
-	catch (error) {
-		console.error(error);
-		message.reply('there was an error trying to execute that command!');
-	}
-});
+		case 'stop':
+			var server=servers[message.guild.id];
+			if(message.guild.voiceConnection){
+				for(var i=server.queue.length-1;i>=0;i--){
+					server.queue.splice(i,1);
+				}
+				server.dispacther.end();
+				message.channel.send("Ending the queue Leaving the voice channel");
+				console.log("stopped the queue");
+			}
+			if(message.guild.id)message.guild.voiceConnection.disconnect()
+			break;
+
+			}
+ });
 
 client.login(token);
