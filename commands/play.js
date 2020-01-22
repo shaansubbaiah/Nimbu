@@ -1,30 +1,46 @@
 const ytdl = require('ytdl-core');
-var {servers} = require('./data.js');
+var {servers} = require('../data.js');
 
 module.exports = {
 	name: 'play',
 	description: 'play command.',
-	usage: '[command name]',
+	usage: '<youtube link>',
 	args: true,
 	cooldown: 5,
 	execute(message, args) {
 		console.log(`message: ${message}, args: ${args}`);
+		console.log(`message.channel: ${message.member.voice.channel}`);
 
 		function play(connection, message) {
 			var server = servers[message.guild.id];
 
-			server.dispatcher = connection.playStream(ytdl(server.queue[0], { filter:'audioonly' }));
+			server.dispatcher = connection.play(ytdl(server.queue[0], { filter:'audioonly' }));
+			console.log("b4 shift");
+			console.log(server.queue);
 
 			server.queue.shift();
 
-			server.dispacther.on('end', function() {
+			console.log('after shift');
+			console.log(server.queue);
+
+
+			server.dispatcher.on('finish', () => {
+				console.log('Finished playing!');
 				if(server.queue[0]) {
 					play(connection, message);
 				}
-				else{
-					connection.disconnect();
+				else {
+					server.dispatcher.destroy();
 				}
 			});
+			// server.dispatcher.on('end', function() {
+			// 	if(server.queue[0]) {
+			// 		play(connection, message);
+			// 	}
+			// 	else{
+			// 		connection.disconnect();
+			// 	}
+			// });
 		}
 
 
@@ -32,7 +48,8 @@ module.exports = {
 			message.channel.send('No link attached!');
 			return;
 		}
-		if(!message.member.voiceChannel) {
+
+		if(!message.member.voice.channel) {
 			message.channel.send('You must be in a channel to play the bot');
 			return;
 		}
@@ -46,8 +63,12 @@ module.exports = {
 		var server = servers[message.guild.id];
 
 		server.queue.push(args[0]);
+
+		console.log(server.queue);
+
 		if(!message.guild.voiceConnection) {
-			message.member.voiceChannel.join().then(function(connection) {
+			message.member.voice.channel.join()
+			.then(function(connection) {
 				play(connection, message);
 			});
 		}
