@@ -13,8 +13,6 @@ for (const file of commandFiles) {
 	client.commands.set(command.name, command);
 }
 
-const servers = {};
-
 client.once('ready', () => {
 	console.log('Ready!');
 });

@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core');
+var {servers} = require('./data.js');
 
 module.exports = {
 	name: 'play',
@@ -7,10 +8,10 @@ module.exports = {
 	args: true,
 	cooldown: 5,
 	execute(message, args) {
-		
-		var servers = {};
-		function play(connection) {
-			const server = servers[message.guild.id];
+		console.log(`message: ${message}, args: ${args}`);
+
+		function play(connection, message) {
+			var server = servers[message.guild.id];
 
 			server.dispatcher = connection.playStream(ytdl(server.queue[0], { filter:'audioonly' }));
 
@@ -18,7 +19,7 @@ module.exports = {
 
 			server.dispacther.on('end', function() {
 				if(server.queue[0]) {
-					play(connection);
+					play(connection, message);
 				}
 				else{
 					connection.disconnect();
@@ -42,12 +43,12 @@ module.exports = {
 			};
 		}
 
-		const server = servers[message.guild.id];
+		var server = servers[message.guild.id];
 
 		server.queue.push(args[0]);
 		if(!message.guild.voiceConnection) {
 			message.member.voiceChannel.join().then(function(connection) {
-				play(connection);
+				play(connection, message);
 			});
 		}
 	},

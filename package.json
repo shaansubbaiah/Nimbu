@@ -17,9 +17,9 @@
   },
   "homepage": "https://github.com/shaansubbaiah/discordbot#readme",
   "dependencies": {
-    "discord.js": "^11.5.1",
+    "@discordjs/opus": "^0.1.0",
+    "discord.js": "github:discordjs/discord.js",
     "eslint": "^6.8.0",
-    "opusscript": "0.0.7",
     "sodium": "^3.0.2",
     "ytdl-core": "^1.0.7"
   }
