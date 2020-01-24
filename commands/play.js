@@ -9,38 +9,24 @@ module.exports = {
 	cooldown: 5,
 	execute(message, args) {
 		console.log(`message: ${message}, args: ${args}`);
-		console.log(`message.channel: ${message.member.voice.channel}`);
+		console.log(`message.channel: ${message.member.voiceChannel}`);
 
 		function play(connection, message) {
 			var server = servers[message.guild.id];
 
-			server.dispatcher = connection.play(ytdl(server.queue[0], { filter:'audioonly' }));
-			console.log("b4 shift");
-			console.log(server.queue);
-
+			server.dispatcher = connection.playStream(ytdl(server.queue[0], { quality: 'highestaudio' , highWaterMark: 1 << 25}));
+			// server.dispatcher = connection.play(ytdl(server.queue[0], { filter:'audioonly' , highWaterMark: 1 << 25}));
+			
 			server.queue.shift();
 
-			console.log('after shift');
-			console.log(server.queue);
-
-
-			server.dispatcher.on('finish', () => {
-				console.log('Finished playing!');
+			server.dispatcher.on('end', function() {
 				if(server.queue[0]) {
 					play(connection, message);
 				}
-				else {
-					server.dispatcher.destroy();
+				else{
+					connection.disconnect();
 				}
 			});
-			// server.dispatcher.on('end', function() {
-			// 	if(server.queue[0]) {
-			// 		play(connection, message);
-			// 	}
-			// 	else{
-			// 		connection.disconnect();
-			// 	}
-			// });
 		}
 
 
@@ -49,7 +35,7 @@ module.exports = {
 			return;
 		}
 
-		if(!message.member.voice.channel) {
+		if(!message.member.voiceChannel) {
 			message.channel.send('You must be in a channel to play the bot');
 			return;
 		}
@@ -67,7 +53,7 @@ module.exports = {
 		console.log(server.queue);
 
 		if(!message.guild.voiceConnection) {
-			message.member.voice.channel.join()
+			message.member.voiceChannel.join()
 			.then(function(connection) {
 				play(connection, message);
 			});
