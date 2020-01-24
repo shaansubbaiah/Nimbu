@@ -1,9 +1,5 @@
 const ytdl = require('ytdl-core');
-<<<<<<< HEAD
-var {servers} = require('../data.js');
-=======
 const { servers } = require('../data.js');
->>>>>>> vol
 
 module.exports = {
 	name: 'play',
@@ -16,19 +12,11 @@ module.exports = {
 		console.log(`message.channel: ${message.member.voiceChannel}`);
 
 		function play(connection, message) {
-<<<<<<< HEAD
-			var server = servers[message.guild.id];
-
-			server.dispatcher = connection.playStream(ytdl(server.queue[0], { quality: 'highestaudio' , highWaterMark: 1 << 25}));
-			// server.dispatcher = connection.play(ytdl(server.queue[0], { filter:'audioonly' , highWaterMark: 1 << 25}));
-			
-=======
 			const server = servers[message.guild.id];
 
 			server.dispatcher = connection.playStream(ytdl(server.queue[0], { quality: 'highestaudio', highWaterMark: 1 << 25 }));
 			// server.dispatcher = connection.play(ytdl(server.queue[0], { filter:'audioonly' , highWaterMark: 1 << 25}));
 
->>>>>>> vol
 			server.queue.shift();
 
 			server.dispatcher.on('end', function() {
@@ -58,11 +46,7 @@ module.exports = {
 			};
 		}
 
-<<<<<<< HEAD
-		var server = servers[message.guild.id];
-=======
 		const server = servers[message.guild.id];
->>>>>>> vol
 
 		server.queue.push(args[0]);
 
@@ -70,15 +54,9 @@ module.exports = {
 
 		if(!message.guild.voiceConnection) {
 			message.member.voiceChannel.join()
-<<<<<<< HEAD
-			.then(function(connection) {
-				play(connection, message);
-			});
-=======
 				.then(function(connection) {
 					play(connection, message);
 				});
->>>>>>> vol
 		}
 	},
 };

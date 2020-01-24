@@ -1,10 +1,10 @@
-var {servers} = require('../data.js');
+const { servers } = require('../data.js');
 
 module.exports = {
-    name: 'resume',
-    description: '',
-    execute(message, args) {
-        var server = servers[message.guild.id];
-        server.dispatcher.resume();
-    },
+	name: 'resume',
+	description: '',
+	execute(message, args) {
+		const server = servers[message.guild.id];
+		server.dispatcher.resume();
+	},
 };
