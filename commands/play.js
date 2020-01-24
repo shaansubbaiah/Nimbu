@@ -77,15 +77,14 @@ module.exports = {
 				  i=i+1;
 				} );
 				message.channel.send('please prefix your code with a \'%\' ');
-			  });
+			});
  
 			
-			{
-				const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id);
-				collector.on('collect', message => {
+			const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id);
+			collector.on('collect', message => {
 				if (!message.content.startsWith(prefix) || message.author.bot) return; 
-				 const args = message.content.slice([prefix.length]).split(/ +/);
-			  	if(args[0]=='play'){
+				const args = message.content.slice([prefix.length]).split(/ +/);
+				if(args[0]=='play'){
 					args.shift();
 					let n = args[0];
 					n=n-1;
@@ -107,9 +106,7 @@ module.exports = {
 						}
 					}
 				 }
-				})
-			}
-
+			})
 		}
 	},
 };
