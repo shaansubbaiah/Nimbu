@@ -1,10 +1,15 @@
-const { servers } = require('../data.js');
+const { servers, client } = require('../data.js');
 
 module.exports = {
 	name: 'skip',
 	description: '',
 	execute(message) {
 		const server = servers[message.guild.id];
+
+		if(server.queue.length == 0) {
+			client.user.setActivity('Quietly', { type: 'WATCHING' });
+		}
+
 		if(server.dispatcher) {
 			server.dispatcher.end();
 		}

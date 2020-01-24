@@ -1,3 +1,6 @@
+const Discord = require('discord.js');
+
 module.exports = {
-    servers: {},
+	client: new Discord.Client(),
+	servers: {},
 };

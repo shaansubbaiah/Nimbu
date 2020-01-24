@@ -2,7 +2,8 @@ const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 
-const client = new Discord.Client();
+// const client = new Discord.Client();
+const { client } = require('./data.js');
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 
@@ -15,6 +16,12 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('Ready!');
+});
+client.once('reconnecting', () => {
+	console.log('Reconnecting!');
+});
+client.once('disconnect', () => {
+	console.log('Disconnect!');
 });
 
 client.on('message', message => {
