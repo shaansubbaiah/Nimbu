@@ -21,6 +21,7 @@
     "eslint": "^6.8.0",
     "opusscript": "0.0.7",
     "sodium": "^3.0.2",
+    "yt-search": "^1.1.2",
     "ytdl-core": "^1.0.7",
     "ytdl-getinfo": "^1.1.0"
   }
