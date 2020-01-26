@@ -18,16 +18,11 @@ module.exports = {
 
 			server.dispatcher = connection.playStream(ytdl(server.queue[0].url, { quality: 'highestaudio', highWaterMark: 1 << 25 }));
 
-			console.log(`Now Playing: ${server.queue[0]}`);
 			client.user.setActivity('Music', { type: 'PLAYING' });
 
 			server.queue.shift();
 
 			server.dispatcher.on('end', function() {
-				message.channel.fetchMessage(npid).then(msg => {
-					msg.delete();
-				});
-
 				if(server.queue[0]) {play(connection);}
 
 				else{
