@@ -11,7 +11,9 @@ module.exports = {
 	args: true,
 	cooldown: 2,
 	execute(message, args) {
+
 		function play(connection) {
+
 			const server = servers[message.guild.id];
 
 			message.channel.send('Now Playing: ' + server.queue[0].title);
@@ -33,31 +35,9 @@ module.exports = {
 		}
 		// end of play()
 
+		function queueSong(songUrl) {
 
-		if(!args[0]) {
-			message.channel.send('Enter a youtube link/ search term!');
-			return;
-		}
-
-		if(!message.member.voiceChannel) {
-			message.channel.send('You must be in a voice channel to play the bot!');
-			return;
-		}
-
-		if(!servers[message.guild.id]) {
-			servers[message.guild.id] = {
-				queue:[],
-			};
-		}
-
-		let server = servers[message.guild.id];
-
-
-		// if youtube url entered
-		if(args[0].match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
-
-			// get song info
-			yts(args[0], function(err, r) {
+			yts(songUrl, function(err, r) {
 				if(err) throw err;
 				// first result only
 				const info = r.videos[0];
@@ -79,6 +59,30 @@ module.exports = {
 						play(connection);
 					});
 			}
+		}
+		// end of queueSong()
+
+		if(!args[0]) {
+			message.channel.send('Enter a youtube link/ search term!');
+			return;
+		}
+
+		if(!message.member.voiceChannel) {
+			message.channel.send('You must be in a voice channel to play the bot!');
+			return;
+		}
+
+		if(!servers[message.guild.id]) {
+			servers[message.guild.id] = {
+				queue:[],
+			};
+		}
+
+		const server = servers[message.guild.id];
+
+		// if youtube url entered
+		if(args[0].match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
+			queueSong(args[0]);
 		}
 
 		// if search term provided
@@ -116,7 +120,6 @@ module.exports = {
 				// exit if not a number or arguments provided
 				if(isNaN(n) || chargs[1]) return;
 
-
 				if((n >= 1) && (n <= 5)) {
 
 					if(!servers[choice.guild.id]) {
@@ -125,38 +128,10 @@ module.exports = {
 						};
 					}
 
-					server = servers[choice.guild.id];
-
-					// get info of chosen song and push
-					// server.queue.push(res[n - 1]);
-					yts(res[n - 1], function(err, r) {
-						if(err) throw err;
-						// first result only
-						const info = r.videos[0];
-
-						const song = {
-							title: info.title,
-							url: info.url,
-							timestamp: info.timestamp,
-							seconds: info.seconds,
-							thumb: info.thumbnail,
-						};
-						server.queue.push(song);
-
-					});
-
-
-					if(!choice.guild.voiceConnection) {
-						choice.member.voiceChannel.join()
-							.then(function(connection) {
-								play(connection, choice);
-							});
-					}
-
+					queueSong(res[n - 1]);
 				}
-				else {
-					choice.channel.send('Enter an integer between 1-5.');
-				}
+
+				else {choice.channel.send('Enter an integer between 1-5.');}
 			});
 		}
 	},
