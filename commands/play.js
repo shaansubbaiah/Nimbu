@@ -15,56 +15,6 @@ module.exports = {
 		function play(connection) {
 			const server = servers[message.guild.id];
 
-
-			// getInfo(server.queue[0])
-			// 	.then(info => {
-			// 		const song = {
-			// 			title: info.items[0].title,
-			// 			url:
-			// 		}
-			// 		.then(sent => {
-			// 			npid = sent.id;
-			// 		})
-			// 		.catch(console.error);
-			// 	});
-
-			// let info = getInfo(server.queue[0]);
-			// const song = {
-			// 	url: server.queue[0],
-			// 	title: info.items[0].title,
-
-			// }
-
-			// message.channel.send('Now Playing: ' + info.items[0].title)
-			// song structure
-
-			// let npid;
-			// getInfo(server.queue[0])
-			// 	.then(info => {
-			// 		console.log('URL from ytdlgetInfo:' + info.items[0].url);
-			// 		message.channel.send('Now Playing: ' + info.items[0].title)
-			// 			.then(sent => {
-			// 				npid = sent.id;
-			// 			})
-			// 			.catch(console.error);
-			// 	});
-
-
-			// let npid;
-			// getInfo(server.queue[0])
-			// 	.then(info => {
-			// 		message.channel.send('Now Playing: ' + info.items[0].title)
-			// 			.then(sent => {
-			// 				npid = sent.id;
-			// 			})
-			// 			.catch(console.error);
-			// 	});
-
-
-			//
-			//
-			//
-
 			message.channel.send('Now Playing: ' + server.queue[0].title);
 
 			server.dispatcher = connection.playStream(ytdl(server.queue[0].url, { quality: 'highestaudio', highWaterMark: 1 << 25 }));
@@ -107,13 +57,7 @@ module.exports = {
 		}
 
 		let server = servers[message.guild.id];
-		// const song = {
-		// 	url: '',
-		// 	title: '',
-		// 	timestamp: '',
-		// 	seconds: 0,
-		// 	thumb: '',
-		// };
+
 
 		// if youtube url entered
 		if(args[0].match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
@@ -131,13 +75,9 @@ module.exports = {
 					seconds: info.seconds,
 					thumb: info.thumbnail,
 				};
-				console.log('song');
-				console.log(song);
-
 				server.queue.push(song);
+
 			});
-			// server.queue.push(args[0]);
-			console.log(`Queue: ${server.queue}`);
 
 			if(!message.guild.voiceConnection) {
 				message.member.voiceChannel.join()
@@ -169,14 +109,13 @@ module.exports = {
 				vidlist = '';
 			});
 
-			// to get selected option
 
+			// to get selected option
 			const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { max: 1 });
 			collector.on('collect', choice => {
 				if (!choice.content.startsWith(prefix) || choice.author.bot) return;
 
 				const chargs = choice.content.slice([prefix.length]).split(/ +/);
-				console.log('val: ' + chargs[0]);
 
 				const n = parseInt(chargs[0]);
 
@@ -208,12 +147,9 @@ module.exports = {
 							seconds: info.seconds,
 							thumb: info.thumbnail,
 						};
-						console.log('song 2nd');
-						console.log(song);
-
 						server.queue.push(song);
+
 					});
-					console.log(`Queue: ${server.queue}`);
 
 
 					if(!choice.guild.voiceConnection) {
