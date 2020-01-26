@@ -1,6 +1,5 @@
 const ytdl = require('ytdl-core');
 const yts = require('yt-search');
-const { getInfo } = require('ytdl-getinfo');
 const { servers, client } = require('../data.js');
 const { prefix } = require('../config.json');
 const Discord = require('discord.js');
