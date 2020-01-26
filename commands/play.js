@@ -8,24 +8,66 @@ const Discord = require('discord.js');
 module.exports = {
 	name: 'play',
 	description: 'play command.',
-	usage: '<youtube link>',
+	usage: '<youtube link> or <search term>',
 	args: true,
 	cooldown: 2,
 	execute(message, args) {
 		function play(connection) {
 			const server = servers[message.guild.id];
 
-			let npid;
-			getInfo(server.queue[0])
-				.then(info => {
-					message.channel.send('Now Playing: ' + info.items[0].title)
-						.then(sent => {
-							npid = sent.id;
-						})
-						.catch(console.error);
-				});
 
-			server.dispatcher = connection.playStream(ytdl(server.queue[0], { quality: 'highestaudio', highWaterMark: 1 << 25 }));
+			// getInfo(server.queue[0])
+			// 	.then(info => {
+			// 		const song = {
+			// 			title: info.items[0].title,
+			// 			url:
+			// 		}
+			// 		.then(sent => {
+			// 			npid = sent.id;
+			// 		})
+			// 		.catch(console.error);
+			// 	});
+
+			// let info = getInfo(server.queue[0]);
+			// const song = {
+			// 	url: server.queue[0],
+			// 	title: info.items[0].title,
+
+			// }
+
+			// message.channel.send('Now Playing: ' + info.items[0].title)
+			// song structure
+
+			// let npid;
+			// getInfo(server.queue[0])
+			// 	.then(info => {
+			// 		console.log('URL from ytdlgetInfo:' + info.items[0].url);
+			// 		message.channel.send('Now Playing: ' + info.items[0].title)
+			// 			.then(sent => {
+			// 				npid = sent.id;
+			// 			})
+			// 			.catch(console.error);
+			// 	});
+
+
+			// let npid;
+			// getInfo(server.queue[0])
+			// 	.then(info => {
+			// 		message.channel.send('Now Playing: ' + info.items[0].title)
+			// 			.then(sent => {
+			// 				npid = sent.id;
+			// 			})
+			// 			.catch(console.error);
+			// 	});
+
+
+			//
+			//
+			//
+
+			message.channel.send('Now Playing: ' + server.queue[0].title);
+
+			server.dispatcher = connection.playStream(ytdl(server.queue[0].url, { quality: 'highestaudio', highWaterMark: 1 << 25 }));
 
 			console.log(`Now Playing: ${server.queue[0]}`);
 			client.user.setActivity('Music', { type: 'PLAYING' });
@@ -65,11 +107,36 @@ module.exports = {
 		}
 
 		let server = servers[message.guild.id];
+		// const song = {
+		// 	url: '',
+		// 	title: '',
+		// 	timestamp: '',
+		// 	seconds: 0,
+		// 	thumb: '',
+		// };
 
 		// if youtube url entered
 		if(args[0].match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
 
-			server.queue.push(args[0]);
+			// get song info
+			yts(args[0], function(err, r) {
+				if(err) throw err;
+				// first result only
+				const info = r.videos[0];
+
+				const song = {
+					title: info.title,
+					url: info.url,
+					timestamp: info.timestamp,
+					seconds: info.seconds,
+					thumb: info.thumbnail,
+				};
+				console.log('song');
+				console.log(song);
+
+				server.queue.push(song);
+			});
+			// server.queue.push(args[0]);
 			console.log(`Queue: ${server.queue}`);
 
 			if(!message.guild.voiceConnection) {
@@ -126,7 +193,27 @@ module.exports = {
 					}
 
 					server = servers[choice.guild.id];
-					server.queue.push(res[n - 1]);
+
+					// get info of chosen song and push
+					// server.queue.push(res[n - 1]);
+					yts(res[n - 1], function(err, r) {
+						if(err) throw err;
+						// first result only
+						const info = r.videos[0];
+
+						const song = {
+							title: info.title,
+							url: info.url,
+							timestamp: info.timestamp,
+							seconds: info.seconds,
+							thumb: info.thumbnail,
+						};
+						console.log('song 2nd');
+						console.log(song);
+
+						server.queue.push(song);
+					});
+					console.log(`Queue: ${server.queue}`);
 
 
 					if(!choice.guild.voiceConnection) {
