@@ -1,9 +1,9 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
-
-// const client = new Discord.Client();
 const { client } = require('./data.js');
+
+
 client.commands = new Discord.Collection();
 const cooldowns = new Discord.Collection();
 
@@ -23,6 +23,7 @@ client.once('reconnecting', () => {
 client.once('disconnect', () => {
 	console.log('Disconnect!');
 });
+
 
 client.on('message', message => {
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
