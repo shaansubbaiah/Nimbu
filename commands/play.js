@@ -13,20 +13,11 @@ module.exports = {
 	execute(message, args) {
 		function play(connection, message) {
 			let server = servers[message.guild.id];
+
+
 			server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter:'audioonly', quality: 'highestaudio' , highWaterMark: 1 << 25}));
 			getInfo(server.queue[0]).then(info => { message.channel.send(info.items[0].title)});
 			server.queue.shift();
-
-
-			server.dispatcher.on('finish', () => {
-				console.log('Finished playing!');
-				if(server.queue[0]) {
-					play(connection, message);
-				}
-				else {
-					server.dispatcher.destroy();
-				}
-			});
 			 server.dispatcher.on('end', function() {
 			 	if(server.queue[0]) {
 			 		play(connection, message);
