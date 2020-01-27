@@ -11,3 +11,5 @@ To run:
  - Sticker
  - Wallpaper
  - Photo editor
+
+test
