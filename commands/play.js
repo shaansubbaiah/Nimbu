@@ -14,12 +14,11 @@ module.exports = {
 		function play(connection, message) {
 			let server = servers[message.guild.id];
 
-
 			server.dispatcher = connection.playStream(ytdl(server.queue[0], {filter:'audioonly', quality: 'highestaudio' , highWaterMark: 1 << 25}));
 			getInfo(server.queue[0]).then(info => { message.channel.send(info.items[0].title)});
 			server.queue.shift();
 			 server.dispatcher.on('end', function() {
-			 	if(server.queue[0]) {
+			 	if(server.queue[0] ) {
 			 		play(connection, message);
 			 	}
 			 	else{
