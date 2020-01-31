@@ -15,8 +15,17 @@ module.exports = {
 		function play(connection) {
 
 			const server = servers[message.guild.id];
+			// embed
+			const NowPlayingEmbed = new Discord.RichEmbed()
+				.setColor('#4dfff4')
+				.setAuthor('| Now Playing', server.queue[0].authorthumb)
+				.setDescription('```yaml\n' + server.queue[0].title + '```')
+				.setThumbnail(server.queue[0].thumb)
+				.setTimestamp()
+				.setFooter('(' + server.queue[0].timestamp + ')');
 
-			message.channel.send('Now Playing: ' + server.queue[0].title);
+			message.channel.send(NowPlayingEmbed);
+			// message.channel.send('Now Playing: ' + server.queue[0].title);
 
 			server.dispatcher = connection.playStream(ytdl(server.queue[0].url, { quality: 'highestaudio', highWaterMark: 1 << 25 }));
 
@@ -25,7 +34,10 @@ module.exports = {
 			server.queue.shift();
 
 			server.dispatcher.on('end', function() {
-				if(server.queue[0]) {play(connection);}
+
+				if(server.queue[0]) {
+					play(connection);
+				}
 
 				else{
 					connection.disconnect();
@@ -37,21 +49,30 @@ module.exports = {
 
 		function queueSong(songUrl) {
 
-			yts(songUrl, function(err, r) {
+			yts(songUrl, function(err, s) {
 				if(err) throw err;
 				// first result only
-				const info = r.videos[0];
+				console.log(`result in songq: ${songUrl}`);
+				const info = s.videos[0];
+				console.log(info);
 
 				const song = {
 					title: info.title,
 					url: info.url,
 					timestamp: info.timestamp,
 					seconds: info.seconds,
-					thumb: info.thumbnail,
+					// use info.thumbnail for lower res image
+					thumb: info.image,
+					// song requester's thumbnail
+					authorthumb: message.author.displayAvatarURL,
 				};
+
 				server.queue.push(song);
+				console.log('queue: ');
+				console.log (server.queue);
 
 			});
+
 
 			if(!message.guild.voiceConnection) {
 				message.member.voiceChannel.join()
@@ -89,21 +110,26 @@ module.exports = {
 		else {
 			// store search results
 			const res = [];
-			let vidlist = '';
+			let vidlist = '', srchMsgId;
 			yts(args.join(' '), function(err, r) {
 				if (err) throw err;
 				// top 5 results
 				const videos = r.videos.slice(0, 5);
+				console.log(videos);
 
 				let i = 0;
 				videos.forEach(function(v) {
-					res[i] = (v.url);
+					res[i] = v.videoId;
 					vidlist += `${i + 1}. ${ v.title } (${ v.timestamp }) \n`;
 					i++;
 				});
-
+				console.log('i = ' + i);
 				vidlist += `eg. **${prefix}1** to play first result`;
-				message.channel.send(vidlist);
+
+				message.channel.send(vidlist)
+					.then(sent => {srchMsgId = sent.id;})
+					.catch(console.error);
+
 				vidlist = '';
 			});
 
@@ -128,7 +154,14 @@ module.exports = {
 						};
 					}
 
+					console.log('Result:');
+					console.log(`${res[n - 1]}`);
 					queueSong(res[n - 1]);
+
+					// remove search result message
+					message.channel.fetchMessage(srchMsgId).then(msg => {
+						msg.delete();
+					});
 				}
 
 				else {choice.channel.send('Enter an integer between 1-5.');}
