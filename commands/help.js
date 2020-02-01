@@ -1,4 +1,6 @@
 const { prefix } = require('../config.json');
+const { client } = require('../data.js');
+const Discord = require('discord.js');
 
 module.exports = {
 	name: 'help',
@@ -7,15 +9,24 @@ module.exports = {
 	usage: '[command name]',
 	cooldown: 5,
 	execute(message, args) {
-		const data = [];
 		const { commands } = message.client;
 
+		// display help of all commands
 		if (!args.length) {
-			data.push('Here\'s a list of all my commands:');
-			data.push(commands.map(command => command.name).join(', '));
-			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
+			const helpEmbed = new Discord.RichEmbed()
+				.setColor('#4dfff4')
+				.setAuthor('| Help Commands', message.author.displayAvatarURL)
+				.setTitle(`You can send \`${prefix}help [command name]\` to get info on a specific command!`)
+				.setThumbnail(client.user.displayAvatarURL)
+				.setTimestamp();
 
-			return message.author.send(data, { split: true })
+			commands.forEach(command => {
+				helpEmbed.addField(`**${prefix + command.name}**`, `${command.description || null}`, false);
+			});
+
+			message.author.send(helpEmbed);
+
+			return message.author.send(helpEmbed)
 				.then(() => {
 					if (message.channel.type === 'dm') return;
 					message.reply('I\'ve sent you a DM with all my commands!');
@@ -33,14 +44,16 @@ module.exports = {
 			return message.reply('that\'s not a valid command!');
 		}
 
-		data.push(`**Name:** ${command.name}`);
+		// for single command help
+		const commandEmbed = new Discord.RichEmbed()
+			.setColor('#4dfff4')
+			.setTitle(`\`${prefix}${command.name}\``);
 
-		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
-		if (command.description) data.push(`**Description:** ${command.description}`);
-		if (command.usage) data.push(`**Usage:** ${prefix}${command.name} ${command.usage}`);
+		if (command.aliases) commandEmbed.addField('**Aliases:**', `${command.aliases.join(', ')}`, false);
+		if (command.description) commandEmbed.addField('**Description:**', `${command.description}`, false);
+		if (command.usage) commandEmbed.addField('**Usage:**', `${prefix}${command.name} ${command.usage}`, false);
+		commandEmbed.addField('**Cooldown:**', `${command.cooldown || 3} second(s)`, true);
 
-		data.push(`**Cooldown:** ${command.cooldown || 3} second(s)`);
-
-		message.channel.send(data, { split: true });
+		message.author.send(commandEmbed);
 	},
 };

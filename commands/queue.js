@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'queue',
-	description: 'prints song queue',
+	description: 'Displays the song queue.',
 	cooldown: 5,
 	aliases: ['q'],
 	args: false,
@@ -21,7 +21,7 @@ module.exports = {
 
 			let i = 1;
 			server.queue.forEach(song => {
-				queueEmbed.addField(`${i}) ${song.url}`, song.title, false);
+				queueEmbed.addField(`${i}) ${song.url}`, `${song.title} - (${song.timestamp})`, false);
 				i++;
 			});
 

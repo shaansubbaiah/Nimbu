@@ -6,7 +6,7 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'play',
-	description: 'play command.',
+	description: 'Play command.',
 	usage: '<youtube link> or <search term>',
 	args: true,
 	cooldown: 2,

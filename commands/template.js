@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'template',
-	description: 'contain template command',
+	description: 'Contains template command',
 	cooldown: 5,
 	aliases: ['blueprint'],
 	args: false,

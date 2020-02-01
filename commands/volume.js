@@ -2,7 +2,8 @@ const { servers } = require('../data.js');
 
 module.exports = {
 	name: 'volume',
-	description: '',
+	description: 'Set volume of the bot',
+	aliases: ['v', 'vol'],
 	usage: '<frac value between 0 and 1>',
 	execute(message, args) {
 		const server = servers[message.guild.id];
