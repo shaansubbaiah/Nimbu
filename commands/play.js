@@ -102,8 +102,12 @@ module.exports = {
 		const server = servers[message.guild.id];
 
 		// if youtube url entered
-		if(args[0].match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
-			queueSong(args[0]);
+		let link = args[0];
+		const timeRegex = /(\?t|\&t|&start)=(\S*)/gm;
+		if(link.match(/^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+/gm)) {
+			// remove timestamp in url
+			link = link.replace(timeRegex, '');
+			queueSong(link);
 		}
 
 		// if search term provided
