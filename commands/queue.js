@@ -1,4 +1,5 @@
 const { servers } = require('../data.js');
+const { embedColor } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -15,7 +16,7 @@ module.exports = {
 		}
 		else {
 			const queueEmbed = new Discord.RichEmbed()
-				.setColor('#4dfff4')
+				.setColor(embedColor)
 				.setAuthor('| Queue', message.author.displayAvatarURL)
 				.setTimestamp();
 

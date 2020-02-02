@@ -1,7 +1,7 @@
 const ytdl = require('ytdl-core');
 const yts = require('yt-search');
 const { servers, client } = require('../data.js');
-const { prefix } = require('../config.json');
+const { prefix, embedColor } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -13,13 +13,17 @@ module.exports = {
 	execute(message, args) {
 
 		function play(connection) {
+			// join VC if not already in one
+			if(!message.guild.voiceConnection) {
+				message.member.voiceChannel.join();
+			}
 
 			const server = servers[message.guild.id];
 			// embed
 			const NowPlayingEmbed = new Discord.RichEmbed()
-				.setColor('#4dfff4')
+				.setColor(embedColor)
 				.setAuthor('| Now Playing', server.queue[0].authorthumb)
-				.setDescription('```yaml\n' + server.queue[0].title + '```')
+				.setDescription('```CSS\n' + server.queue[0].title + '```')
 				.setThumbnail(server.queue[0].thumb)
 				.setTimestamp()
 				.setFooter('(' + server.queue[0].timestamp + ')');
@@ -66,6 +70,11 @@ module.exports = {
 					// song requester's thumbnail
 					authorthumb: message.author.displayAvatarURL,
 				};
+
+				const addedQueueEmbed = new Discord.RichEmbed()
+					.setColor(embedColor)
+					.setDescription('Queued ```CSS\n' + song.title + '```');
+				message.channel.send(addedQueueEmbed);
 
 				server.queue.push(song);
 				console.log('queue: ');
