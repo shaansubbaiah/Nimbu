@@ -25,7 +25,7 @@ const { servers, client } = require('../data.js');
 
 module.exports = {
 	name: 'skip',
-	description: '',
+	description: 'Skip to the next track.',
 	execute(message) {
 		const server = servers[message.guild.id];
 

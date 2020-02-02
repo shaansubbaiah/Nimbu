@@ -24,7 +24,7 @@ const { servers, client } = require('../data.js');
 
 module.exports = {
 	name: 'stop',
-	description: '',
+	description: 'Stops playing and exits voice channel.',
 	execute(message) {
 		const server = servers[message.guild.id];
 
