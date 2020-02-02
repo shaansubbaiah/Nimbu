@@ -24,8 +24,4 @@ module.exports = {
 				.catch(console.error);
 		}
 	},
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 19ddb844f697b507f5b84c3f72e2f355a5b2a853
