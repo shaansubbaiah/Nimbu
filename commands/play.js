@@ -132,7 +132,8 @@ module.exports = {
 
 				let i = 0;
 				videos.forEach(function(v) {
-					res[i] = v.videoId;
+					res[i] = v.title;
+
 					vidlist += `${i + 1}. ${ v.title } (${ v.timestamp }) \n`;
 					i++;
 				});
