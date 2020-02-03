@@ -7,6 +7,6 @@ module.exports = {
 	usage: '!template',
 	execute(message) {
 		// function goes here
-		message.channel.send('YAH YAH YAH');
+		message.channel.send(message);
 	},
 };
