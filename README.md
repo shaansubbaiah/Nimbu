@@ -7,7 +7,7 @@ Nimbu lets you stream or download audio. Features a command handler, queuing sys
 ## Get Nimbu
 
  1. Clone the github repository.
- 2. Open `config.json` and edit the `token`, `prefix` and `invite link`.
+ 2. Open `config.json` and edit the `token`, `default_prefix` and `invite link`.
  3. Run: `npm install` and `node index.js` to get the bot running.
 
 
