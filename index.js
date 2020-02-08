@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const { prefix, token, embedColor } = require('./config.json');
-const { client } = require('./data.js');
+const {  default_prefix ,token, embedColor } = require('./config.json');
+const { prefixs,client} = require('./data.js');
 
 
 client.commands = new Discord.Collection();
@@ -24,8 +24,46 @@ client.once('disconnect', () => {
 	console.log('Disconnect!');
 });
 
+// welcome msg on joining server
+client.on('guildCreate', guild => {
+	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+	//asigning default prefix to the server 
+	prefixs[guild.id]={
+		serv_pre:default_prefix,
+	};
+	console.log("prefix set for server"+guild.id);
+	const welcomeEmbed = new Discord.RichEmbed()
+		.setColor(embedColor)
+		.setTitle('Pyne -the bot brother of Nimbu')
+		.setDescription(' ~ Thanks for adding me to the server! ~ ')
+		.setThumbnail(client.user.displayAvatarURL)
+		.addBlankField()
+		.addField('Get to know me better!', '**·** Use **-help** for a list of my commands\n**·** **-prefix** to change my prefix\n', false)
+		.addBlankField()
+		.addField('Let\'s play some music!', '**·** Use **-play** to start playing a song\n**·** eg. `-play Kendrick Lamar - HUMBLE` or `-play https://www.youtube.com/watch?v=tvTRZJ-4EyI`\n**·** Commands **-pause**,  **-resume**,  **-skip**,  **-stop** control music playback.', false)
+		.setFooter('When life gives you lemons, add em to your server ;)')
+		.setTimestamp();
+	guild.systemChannel.send(welcomeEmbed);
+});
+
+let prefix;
 
 client.on('message', message => {
+	const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
+	if(message.guild){
+		if(!prefixs[message.guild.id]){
+			prefixs[message.guild.id]={
+				serv_pre:default_prefix,
+			};
+			console.log(prefixMention);
+			console.log("prefix set for server "+ message.guild.name);
+			prefix= message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : default_prefix;
+		}
+		else{
+			prefix= message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : prefixs[message.guild.id].serv_pre;
+		}
+	}
+	
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).split(/ +/);
@@ -79,21 +117,5 @@ client.on('message', message => {
 	}
 });
 
-// welcome msg on joining server
-client.on('guildCreate', guild => {
-	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
-	const welcomeEmbed = new Discord.RichEmbed()
-		.setColor(embedColor)
-		.setTitle('Nimbu - bot for music')
-		.setDescription(' ~ Thanks for adding me to the server! ~ ')
-		.setThumbnail(client.user.displayAvatarURL)
-		.addBlankField()
-		.addField('Get to know me better!', '**·** Use **!help** for a list of my commands\n**·** **!prefix** to change my prefix\n', false)
-		.addBlankField()
-		.addField('Let\'s play some music!', '**·** Use **!play** to start playing a song\n**·** eg. `!play Kendrick Lamar - HUMBLE` or `!play https://www.youtube.com/watch?v=tvTRZJ-4EyI`\n**·** Commands **!pause**,  **!resume**,  **!skip**,  **!stop** control music playback.', false)
-		.setFooter('When life gives you lemons, add em to your server ;)')
-		.setTimestamp();
-	guild.systemChannel.send(welcomeEmbed);
-});
 
 client.login(token);
