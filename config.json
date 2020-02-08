@@ -1,5 +1,5 @@
 {
-	"prefix": "!",
+	"default_prefix": "!",
 	"token": "NjY1MTE2OTY4MjQ4MDE2OTE2.Xhg90g.TqXj_Ozrjc-XTaeD6PLL4Ko0fMw",
 	"embedColor": "#b7ff00",
 	"inviteLink": "https://discordapp.com/api/oauth2/authorize?client_id=665116968248016916&permissions=8&scope=bot"
