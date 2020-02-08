@@ -20,18 +20,20 @@ module.exports = {
 			const server = servers[message.guild.id];
 
 			message.channel.send(`Downloading ${server.dlQueue[0].title}. This may take a while.`);
-			console.log('song 1');
-			console.log(server.dlQueue[0]);
 
 			// generate random 4 digit number
+			// in case same song is downloaded from different servers,
+			// to prevent deletion of the song before it gets uploaded on each server
 			const rndm = Math.floor(Math.random() * Math.floor(1234));
 			const dlTitle = server.dlQueue[0].title + rndm;
 
+			// create /tmp firectory if not already present
 			const DownloadPath = './tmp';
 			fs.ensureDir(DownloadPath, err => {
 				console.log(err);
 			});
 
+			// download path of flv, mp3 files
 			const flvPath = `./tmp/${dlTitle}.flv`;
 			const mp3Path = `./tmp/${dlTitle}.mp3`;
 
@@ -77,60 +79,9 @@ module.exports = {
 				.on('error', console.error)
 				// save to flvPath
 				.on('end', function() {
-					console.log('done: saving flv');
-					console.log('song 2');
-					console.log(server.dlQueue[0]);
-
 					convertToMp3();
 				})
 				.pipe(fs.createWriteStream(flvPath));
-
-			// const getFlv = ytdl(server.queue[0].url, { quality: 'highestaudio', highWaterMark: 1 << 25 })
-			// 	.on('end', function() {
-			// 		console.log('done: saving flv');
-			// 		console.log('song 2');
-			// 		console.log(server.queue[0]);
-			// 		const getMp3 = ffmpeg(flvPath)
-			// 			.toFormat('mp3')
-			// 			.on('error', function(err) {
-			// 				console.log('An error occurred: ' + err.message);
-			// 			})
-			// 			.on('end', function() {
-			// 				console.log('done: flv -> mp3');
-
-			// 				console.log('song 3');
-			// 				console.log(server.queue[0]);
-			// 				const downloadEmbed = new Discord.RichEmbed()
-			// 					.setColor('#4dfff4')
-			// 					.setAuthor('| Download MP3', server.queue[0].authorthumb)
-			// 					.setDescription('```yaml\n' + server.queue[0].title + '```')
-			// 					.setThumbnail(server.queue[0].thumb)
-			// 					.setTimestamp()
-			// 					.setFooter('(' + server.queue[0].timestamp + ')')
-			// 					.attachFile(mp3Path);
-
-			// 				message.channel.send(downloadEmbed)
-			// 					.then(msg => {
-			// 					// delete flv and mp3 files
-			// 						[flvPath, mp3Path].forEach(path => {
-			// 							fs.unlink(path, (err) => {
-			// 								if (err) {
-			// 									console.error(err);
-			// 									return;
-			// 								}
-			// 							});
-			// 						});
-
-			// 					},
-
-			// 					);
-			// 				// const attachmentmp3 = new Discord.Attachment('converted.mp3');
-			// 				// message.channel.send('Download MP3:', attachmentmp3);
-
-			// 			})
-			// 			.save(mp3Path);
-			// 	})
-			// 	.pipe(fs.createWriteStream(flvPath));
 		}
 		// end of play()
 
@@ -138,10 +89,9 @@ module.exports = {
 
 			yts(songUrl, function(err, s) {
 				if(err) throw err;
+
 				// first result only
-				// console.log(`result in songq: ${songUrl}`);
 				const info = s.videos[0];
-				// console.log(info);
 
 				const song = {
 					title: info.title,
@@ -155,8 +105,6 @@ module.exports = {
 				};
 
 				server.dlQueue.push(song);
-				// console.log('queue: ');
-				// console.log (server.queue);
 
 				downloadFile();
 
@@ -172,11 +120,6 @@ module.exports = {
 			message.channel.send('Enter a youtube link/ search term!');
 			return;
 		}
-
-		// if(!message.member.voiceChannel) {
-		// 	message.channel.send('You must be in a voice channel to play the bot!');
-		// 	return;
-		// }
 
 		if(!servers[message.guild.id]) {
 			servers[message.guild.id] = {
@@ -204,7 +147,6 @@ module.exports = {
 				if (err) throw err;
 				// top 5 results
 				const videos = r.videos.slice(0, 5);
-				// console.log(videos);
 
 				let i = 0;
 				videos.forEach(function(v) {
@@ -212,7 +154,7 @@ module.exports = {
 					vidlist += `${i + 1}. ${ v.title } (${ v.timestamp }) \n`;
 					i++;
 				});
-				// console.log('i = ' + i);
+
 				vidlist += `eg. **${prefix}1** to play first result`;
 
 				message.channel.send(vidlist)
@@ -243,8 +185,6 @@ module.exports = {
 						};
 					}
 
-					// console.log('Result:');
-					// console.log(`${res[n - 1]}`);
 					queueSong(res[n - 1]);
 
 					// remove search result message

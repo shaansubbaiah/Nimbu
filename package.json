@@ -18,7 +18,6 @@
   "homepage": "https://github.com/shaansubbaiah/discordbot#readme",
   "dependencies": {
     "discord.js": "^11.5.1",
-    "eslint": "^6.8.0",
     "fluent-ffmpeg": "^2.1.2",
     "fs-extra": "^8.1.0",
     "node-opus": "^0.3.3",
