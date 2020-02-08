@@ -1,5 +1,4 @@
-const { prefix, embedColor } = require('../config.json');
-const { client } = require('../data.js');
+const {prefixs,client } = require('../data.js');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -10,11 +9,11 @@ module.exports = {
 	cooldown: 5,
 	execute(message, args) {
 		const { commands } = message.client;
-
+		const prefix=prefixs[message.guild.id].serv_name ;
 		// display help of all commands
 		if (!args.length) {
 			const helpEmbed = new Discord.RichEmbed()
-				.setColor(embedColor)
+				.setColor('#4dfff4')
 				.setAuthor('| Help Commands', message.author.displayAvatarURL)
 				.setTitle(`You can send \`${prefix}help [command name]\` to get info on a specific command!`)
 				.setThumbnail(client.user.displayAvatarURL)
@@ -34,7 +33,7 @@ module.exports = {
 					message.reply('it seems like I can\'t DM you!');
 				});
 		}
-
+	
 		const name = args[0].toLowerCase();
 		const command = commands.get(name) || commands.find(c => c.aliases && c.aliases.includes(name));
 
@@ -44,7 +43,7 @@ module.exports = {
 
 		// for single command help
 		const commandEmbed = new Discord.RichEmbed()
-			.setColor(embedColor)
+			.setColor('#4dfff4')
 			.setTitle(`\`${prefix}${command.name}\``);
 
 		if (command.aliases) commandEmbed.addField('**Aliases:**', `${command.aliases.join(', ')}`, false);
