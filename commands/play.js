@@ -1,7 +1,7 @@
 const ytdl = require('ytdl-core');
 const yts = require('yt-search');
-const { servers, client } = require('../data.js');
-const { prefix, embedColor } = require('../config.json');
+const {prefixs,servers, client } = require('../data.js');
+const { embedColor } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -11,7 +11,7 @@ module.exports = {
 	args: true,
 	cooldown: 2,
 	execute(message, args) {
-
+		const prefix=prefixs[message.guild.id].serv_pre;
 		function play(connection) {
 			// join VC if not already in one
 			if(!message.guild.voiceConnection) {
@@ -19,6 +19,7 @@ module.exports = {
 			}
 
 			const server = servers[message.guild.id];
+			console.log(server);
 			// embed
 			const NowPlayingEmbed = new Discord.RichEmbed()
 				.setColor(embedColor)
@@ -60,7 +61,7 @@ module.exports = {
 				const info = s.videos[0];
 				console.log(info);
 
-				const song = {
+				let song = {
 					title: info.title,
 					url: info.url,
 					timestamp: info.timestamp,
@@ -170,7 +171,13 @@ module.exports = {
 
 					console.log('Result:');
 					console.log(`${res[n - 1]}`);
-					queueSong(res[n - 1]);
+					try {
+						queueSong(res[n - 1]);
+					}
+					catch (error) {
+						console.error(error);
+						message.reply('there was an error trying to execute that command!');
+					}
 
 					// remove search result message
 					message.channel.fetchMessage(srchMsgId).then(msg => {
