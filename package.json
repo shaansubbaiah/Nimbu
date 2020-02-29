@@ -1,21 +1,21 @@
 {
-  "name": "discordbot",
+  "name": "nimbu",
   "version": "1.0.0",
-  "description": "",
+  "description": "Music bot for Discord that lets you stream or download audio. Features a command handler, queuing system and various playback commands.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shaansubbaiah/discordbot.git"
+    "url": "git+https://github.com/shaansubbaiah/Nimbu.git"
   },
-  "author": "",
+  "author": "Shaan Subbaiah(https://github.com/shaansubbaiah/), Harsh Shankar Rao(https://github.com/HarshShankar)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shaansubbaiah/discordbot/issues"
+    "url": "https://github.com/shaansubbaiah/Nimbu/issues"
   },
-  "homepage": "https://github.com/shaansubbaiah/discordbot#readme",
+  "homepage": "https://github.com/shaansubbaiah/Nimbu#readme",
   "dependencies": {
     "discord.js": "^11.5.1",
     "fluent-ffmpeg": "^2.1.2",

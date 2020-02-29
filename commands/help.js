@@ -1,4 +1,5 @@
-const {prefixs,client } = require('../data.js');
+const { prefixs, client } = require('../data.js');
+const { defaultPrefix, embedColor } = require('../config.json');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -9,13 +10,15 @@ module.exports = {
 	cooldown: 5,
 	execute(message, args) {
 		const { commands } = message.client;
-		const prefix=prefixs[message.guild.id].serv_name ;
+		const prefix = defaultPrefix;
+
 		// display help of all commands
 		if (!args.length) {
 			const helpEmbed = new Discord.RichEmbed()
-				.setColor('#4dfff4')
+				.setColor(embedColor)
 				.setAuthor('| Help Commands', message.author.displayAvatarURL)
 				.setTitle(`You can send \`${prefix}help [command name]\` to get info on a specific command!`)
+				.setDescription(` PLEASE MAKE SURE TO : Replace ${prefix} with the Server's Prefix ;)`)
 				.setThumbnail(client.user.displayAvatarURL)
 				.setTimestamp();
 
@@ -43,7 +46,7 @@ module.exports = {
 
 		// for single command help
 		const commandEmbed = new Discord.RichEmbed()
-			.setColor('#4dfff4')
+			.setColor(embedColor)
 			.setTitle(`\`${prefix}${command.name}\``);
 
 		if (command.aliases) commandEmbed.addField('**Aliases:**', `${command.aliases.join(', ')}`, false);

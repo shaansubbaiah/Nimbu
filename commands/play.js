@@ -1,6 +1,6 @@
 const ytdl = require('ytdl-core');
 const yts = require('yt-search');
-const {prefixs,servers, client } = require('../data.js');
+const { prefixs, servers, client } = require('../data.js');
 const { embedColor } = require('../config.json');
 const Discord = require('discord.js');
 
@@ -59,7 +59,7 @@ module.exports = {
 				// first result only
 				console.log(`result in songq: ${songUrl}`);
 				const info = s.videos[0];
-				console.log(info);
+				console.log(info.title, info.url);
 
 				let song = {
 					title: info.title,
@@ -138,7 +138,6 @@ module.exports = {
 					vidlist += `${i + 1}. ${ v.title } (${ v.timestamp }) \n`;
 					i++;
 				});
-				console.log('i = ' + i);
 				vidlist += `eg. **${prefix}1** to play first result`;
 
 				message.channel.send(vidlist)

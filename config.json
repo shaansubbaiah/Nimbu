@@ -1,5 +1,6 @@
 {
-	"default_prefix": "!",
+	"defaultPrefix": "!",
+	"adminId": "ADMIN_ID_HERE",
 	"token": "YOUR_TOKEN_HERE",
 	"embedColor": "#b7ff00",
 	"inviteLink": "YOUR_INVITE_LINK_HERE"

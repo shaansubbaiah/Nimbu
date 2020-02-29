@@ -4,15 +4,22 @@
 
 Nimbu lets you stream or download audio. Features a command handler, queuing system and various playback commands.
 
+
 ## Get Nimbu
 
  1. Clone the github repository.
- 2. Open `config.json` and edit the `token`, `default_prefix` and `invite link`.
+ 2. Open `config.json` and edit the `token`, `defaultPrefix`, `admin id` and `invite link`.
  3. Run: `npm install` and `node index.js` to get the bot running.
 
 
 > You can create a bot and get a token at the [Discord Developer
 > Portal](https://discordapp.com/developers/applications/)
+
+## Screenshots
+![play demo](extra/play.gif)
+![download demo](extra/download.png)
+![queue demo](extra/queue.png)
+
 
 ## Add or Delete Commands
 Using the command handler, it is very easy to add or remove commands.
@@ -49,6 +56,8 @@ or `!download https://www.youtube.com/watch?v=tvTRZJ-4EyI`
 
 ## Extra 
 Change the prefix from within Discord using the `!prefix` command. This lets different servers have independent prefixes. 
+
+> NOTE: THE PREFIX ISN'T PERSISTANT, IT WILL REVERT TO THE DEFAULT PREFIX WHEN THE BOT IS OFFLINE!
 
 To generate an invite link to add the bot, users can use the `!invite` command.
 

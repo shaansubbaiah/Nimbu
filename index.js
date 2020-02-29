@@ -1,7 +1,7 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const Discord = require('discord.js');
-const {  default_prefix ,token, embedColor } = require('./config.json');
-const { prefixs,client} = require('./data.js');
+const { defaultPrefix, token, embedColor } = require('./config.json');
+const { prefixs, client} = require('./data.js');
 
 
 client.commands = new Discord.Collection();
@@ -29,12 +29,11 @@ client.on('guildCreate', guild => {
 	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
 	//asigning default prefix to the server 
 	prefixs[guild.id]={
-		serv_pre:default_prefix,
+		serv_pre:defaultPrefix,
 	};
-	console.log("prefix set for server"+guild.id);
 	const welcomeEmbed = new Discord.RichEmbed()
 		.setColor(embedColor)
-		.setTitle('Pyne -the bot brother of Nimbu')
+		.setTitle('Nimbu')
 		.setDescription(' ~ Thanks for adding me to the server! ~ ')
 		.setThumbnail(client.user.displayAvatarURL)
 		.addBlankField()
@@ -49,15 +48,13 @@ client.on('guildCreate', guild => {
 let prefix;
 
 client.on('message', message => {
-	const prefixMention = new RegExp(`^<@!?${client.user.id}> `);
+	const prefixMention = new RegExp(`^<@!?${client.user.id}>`);
 	if(message.guild){
 		if(!prefixs[message.guild.id]){
 			prefixs[message.guild.id]={
-				serv_pre:default_prefix,
+				serv_pre:defaultPrefix,
 			};
-			console.log(prefixMention);
-			console.log("prefix set for server "+ message.guild.name);
-			prefix= message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : default_prefix;
+			prefix= message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : defaultPrefix;
 		}
 		else{
 			prefix= message.content.match(prefixMention) ? message.content.match(prefixMention)[0] : prefixs[message.guild.id].serv_pre;

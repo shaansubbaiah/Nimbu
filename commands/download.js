@@ -1,7 +1,7 @@
 const ytdl = require('ytdl-core');
 const yts = require('yt-search');
-const { servers } = require('../data.js');
-const { prefix, embedColor } = require('../config.json');
+const { prefixs, servers } = require('../data.js');
+const { embedColor } = require('../config.json');
 const Discord = require('discord.js');
 const fs = require('fs-extra');
 const ffmpeg = require('fluent-ffmpeg');
@@ -14,6 +14,7 @@ module.exports = {
 	args: true,
 	cooldown: 2,
 	execute(message, args) {
+		const prefix=prefixs[message.guild.id].serv_pre;
 
 		function downloadFile() {
 
@@ -39,7 +40,6 @@ module.exports = {
 
 
 			const convertToMp3 = () => {
-				console.log('entered convert mp3');
 				ffmpeg(flvPath)
 					.toFormat('mp3')
 					.save(mp3Path)
@@ -47,8 +47,6 @@ module.exports = {
 						console.log('An error occurred: ' + err.message);
 					})
 					.on('end', function() {
-						console.log('done: flv -> mp3');
-
 						const downloadEmbed = new Discord.RichEmbed()
 							.setColor(embedColor)
 							.setAuthor('| Download MP3', server.dlQueue[0].authorthumb)
