@@ -37,9 +37,9 @@ client.on('guildCreate', guild => {
 		.setDescription(' ~ Thanks for adding me to the server! ~ ')
 		.setThumbnail(client.user.displayAvatarURL)
 		.addBlankField()
-		.addField('Get to know me better!', '**·** Use **-help** for a list of my commands\n**·** **-prefix** to change my prefix\n', false)
+		.addField('Get to know me better!', '**·** Use **!help** for a list of my commands\n**·** **!prefix** to change my prefix\n', false)
 		.addBlankField()
-		.addField('Let\'s play some music!', '**·** Use **-play** to start playing a song\n**·** eg. `-play Kendrick Lamar - HUMBLE` or `-play https://www.youtube.com/watch?v=tvTRZJ-4EyI`\n**·** Commands **-pause**,  **-resume**,  **-skip**,  **-stop** control music playback.', false)
+		.addField('Let\'s play some music!', '**·** Use **!play** to start playing a song\n**·** eg. `!play Kendrick Lamar - HUMBLE` or `!play https://www.youtube.com/watch?v=tvTRZJ!4EyI`\n**·** Commands **!pause**,  **!resume**,  **!skip**,  **!stop** control music playback.', false)
 		.setFooter('When life gives you lemons, add em to your server ;)')
 		.setTimestamp();
 	guild.systemChannel.send(welcomeEmbed);
