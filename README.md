@@ -1,5 +1,7 @@
 ![nimbu discord bot logo](https://github.com/shaansubbaiah/Nimbu/raw/master/extra/nimbu-github-template.png)
 
+**NOTE: WE HAVE HALTED DEVELOPMENT OF THE BOT AND THE REPOSITORY HAS BEEN ARCHIVED** 
+
 ## Music bot for Discord
 
 Nimbu lets you stream or download audio. Features a command handler, queuing system and various playback commands.
